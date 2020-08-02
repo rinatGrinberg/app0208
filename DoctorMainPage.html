@@ -1,0 +1,332 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+	</form>
+  
+  
+ <link href="style2.css" rel="stylesheet" type="text/css" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script>
+  
+
+   $('*').attr("tabindex","0");
+
+		var runningOnCloud = true;
+		urlCloudHeader = 'https://us-central1-project221-1772f.cloudfunctions.net/app/api/'
+		urlLocalHeader = 'http://localhost:5001/project221-1772f/us-central1/app/api/'
+
+		urlHeader = ""
+		if (runningOnCloud){
+			urlHeader = urlHeader + urlCloudHeader
+		}
+		else
+		{
+			urlHeader = urlHeader + urlLocalHeader
+		}
+
+		function addPhotoSec() {
+
+$.ajax({
+	// url: 'https://us-central1-project221-1772f.cloudfunctions.net/app/api/addMessage', 
+	// url: 'http://localhost:5001/project221-1772f/us-central1/app/api/addMessage',
+	url: urlHeader+'addPhotoSec',
+
+
+	type: 'POST',
+	contentType: 'application/json',
+	data: JSON.stringify({
+		//user credentials
+		id: formxml.patientID.value,
+		pass: formxml.password.value,
+		isDoctor: true,
+		patientID: formxml.patientID.value,
+		photoSecName: formxml.photosec.value
+
+	})
+}
+).done(function (response) {
+
+	alert(JSON.stringify(response));
+
+	document.getElementById("freeText").textContent = JSON.stringify(response);
+
+});
+}
+
+
+
+
+
+		function login(isDoctor) {
+
+			$.ajax({
+				
+				// url: 'https://us-central1-project221-1772f.cloudfunctions.net/app/api/login', 
+				url: urlHeader+'login',
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					id: formxml.id.value,
+					isDoctor: isDoctor,
+					pass: formxml.password.value
+
+				})
+			}
+			).done(function (response) {
+				if (response.ok == true) {
+					if (isDoctor == true) {
+						alert('Hello ' + response.data.firstName + " The DOCTOR");
+					}
+					else {
+						alert('Hello ' + response.data.patientFirstName + " The PATIENT");
+					}
+
+				}
+				else {
+					// If something goes wrong, alert the error message that our service returned
+					alert(JSON.stringify(response.err));
+				}
+				document.getElementById("freeText").textContent = JSON.stringify(response);
+
+			});
+		}
+
+	
+
+		function createPatient() {
+
+			$.ajax({
+				// url: 'https://us-central1-project221-1772f.cloudfunctions.net/app/api/createPatient', 
+				// url: 'http://localhost:5001/project221-1772f/us-central1/app/api/createPatient',
+			
+				url: urlHeader+'',
+
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					//doctor credentials
+					id: formxml.id.value,
+					pass: formxml.password.value,
+					isDoctor: true,
+
+					//new fields
+					
+					patientSwollen: formxml.patientSwollen.value,
+					patientID: formxml.patientID.value,
+					patientPassword: formxml.patientPassword.value,
+					patientFirstName: formxml.patientFirstName.value,
+					patientLastName: formxml.patientLastName.value,
+					patientBirthDate: formxml.patientBirthDate.value,
+					patientGender: formxml.patientGender.value,
+					patientEmail: formxml.patientEmail.value,
+					patientPhone: formxml.patientPhone.value,
+					treatmentType: formxml.treatmentType.value,
+					patientPain: formxml.patientPain.value,
+					dateOfTreatment: formxml.dateOfTreatment.value
+
+				})
+			}
+			).done(function (response) {
+
+				alert(JSON.stringify(response));
+
+				document.getElementById("freeText").textContent = JSON.stringify(response);
+
+			});
+    }
+
+		function getPatient() {
+
+			$.ajax({
+				// url: 'https://us-central1-project221-1772f.cloudfunctions.net/app/api/getPatient', 
+				//url: 'http://localhost:5001/project221-1772f/us-central1/app/api/getPatient',
+				url: urlHeader+'getPatient',
+
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					//doctor credentials
+					id: formxml.id.value,
+					pass: formxml.password.value,
+					isDoctor: true,
+
+					//patient id
+					patientID: formxml.patientID.value
+
+				})
+			}
+			).done(function (response) {
+
+				alert(JSON.stringify(response.ok));
+		    	document.formxml.diagnose.value=response.diagnose
+
+				document.getElementById("freeText2").textContent = JSON.stringify(response);
+
+				document.formxml.patientPassword.value = response.patientPassword;
+				document.formxml.patientFirstName.value = response.patientFirstName;
+				document.formxml.patientLastName.value = response.patientLastName;
+				document.formxml.patientBirthDate.value = response.patientBirthDate;
+				document.formxml.patientGender.value = response.patientGender;
+				document.formxml.patientEmail.value = response.patientEmail;
+				document.formxml.patientPhone.value = response.patientPhone;
+				document.formxml.treatmentType.value = response.treatmentType;
+				document.formxml.patientPain.value = response.patientPain;
+				document.formxml.patientSwollen.value = response.patientSwollen;
+				document.formxml.dateOfTreatment.value = response.dateOfTreatment;
+
+
+				document.getElementById("chatHistory").textContent = JSON.stringify(response.messages);
+
+
+			});
+		}
+
+		function updatePatient() {
+
+			$.ajax({
+				// url: 'https://us-central1-project221-1772f.cloudfunctions.net/app/api/updatePatient', 
+				// url: 'http://localhost:5001/project221-1772f/us-central1/app/api/updatePatient',
+
+				url: urlHeader+'updatePatient',
+
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					//doctor credentials
+					id: formxml.id.value,
+					pass: formxml.password.value,
+					isDoctor: true,
+
+					//new fields
+					patientID: formxml.patientID.value,
+					patientPassword: formxml.patientPassword.value,
+					patientFirstName: formxml.patientFirstName.value,
+					patientLastName: formxml.patientLastName.value,
+					patientBirthDate: formxml.patientBirthDate.value,
+					patientGender: formxml.patientGender.value,
+					patientEmail: formxml.patientEmail.value,
+					patientPhone: formxml.patientPhone.value,
+					patientSwollen: formxml.patientSwollen.value,
+					patientPain: formxml.patientPain.value,					
+					dateOfTreatment: formxml.dateOfTreatment.value,
+					treatmentType: formxml.treatmentType.value
+
+
+				})
+			}
+			).done(function (response) {
+
+				alert(JSON.stringify(response));
+
+				document.getElementById("freeText").textContent = JSON.stringify(response);
+
+			});
+		}
+
+
+	</script>
+	<title>JSON sending test</title>
+</head>
+
+<body>
+	
+	<form action="" name="formxml">
+	<div style="display:none;">
+	
+		<input type="text" name="id" value="221" id="id" style="display:none;">
+    
+		<input type="text" name="password" value="221" id="password" style="display:none;">
+	
+	
+		 <input type="text" name="Message" value="" id="message" ><b>:הודעה למטופל</b>
+
+    <input type="text" name="Diagnose" value=""  id="diagnose"><b>:הוסף אבחון</b> 
+		 
+		 <input type="button" value="שלח" class="ga" onclick="addDiagnose();">
+		 
+		<h1>היסטורית שיחות </h1>
+			<div id="chatHistory" name="chatHistory"
+			style="border:3px solid;font:16px/26px Georgia, Garamond, Serif;overflow:auto; word-wrap: break-word;width:500px">
+		
+		</div>
+
+         <h1>אבחון מטופל </h1>
+		<div id="freeText2" name="freeText2"
+		style="border:3px solid;font:16px/26px Georgia, Garamond, Serif;overflow:auto; word-wrap: break-word;width:500px">
+		</div>
+
+	</div>
+
+	<div class="row" >
+		<div class="column">
+		  <iframe src="https://minnit.chat/doc?embed&nickname=" style=" border-style:solid; width:120%;height: 852px; border-width: 3px;" allowTransparency="true"></iframe><br><a href="https://minnit.chat/doc" target="_blank"></a>
+		</div>
+		<div class="column">
+		  <div class="details">
+		  <h1><b>פרטי מטופל</b></h1> 
+		<br>
+		
+	
+    <input type="text" name="patientID" value="" id="patientID" style="margin-left: 200px;text-align: right;" maxLength="9">
+    <label for ="patientID" style="display: inline-block; width: 140px; text-align: right;" ><b>תעודת זהות</b></label>
+   <br><br>
+   <input type="text" name="First Name" value="" id="patientFirstName"style="margin-left: 200px;text-align: right;">
+   <label for ="patientFirstName"style="display: inline-block; width: 140px; text-align: right;" ><b>שם פרטי</b></label>
+   <br><br>
+    <input type="text" name="Last Name" value="" id="patientLastName"style="margin-left: 200px;text-align: right;">
+    <label for ="Last Name" style="display: inline-block; width: 140px; text-align: right;"><b>שם משפחה</b></label>
+   <br><br>
+  <input type="date" name="Birth date " value="" id="patientBirthDate" style="margin-left: 202px;text-align: right;width: 200">
+  <label for ="patientBirthDate"style="display: inline-block; width: 140px; text-align: right;" ><b>תאריך לידה</b></label>
+   <br><br>
+   <input type="text" name="patientGender" value="" id="patientGender" style="margin-left: 200px;text-align: right;">
+   <label style="display: inline-block; width: 140px; text-align: right;" ><b>מין</b></label> 
+  <br><br>
+   <input type="text" name="Email" value="" id="patientEmail" style="margin-left: 200px;text-align: right;">
+   <label for ="patientGender" style="display: inline-block; width: 140px; text-align: right;"><b>אימייל</b></label>
+   <br><br>
+   <input type="text" name="Phone" value="" id="patientPhone" maxLength="10" title="הכנס רק מספרים" style="margin-left: 200px;text-align: right;">
+   <label for ="patientGender"style="display: inline-block; width: 140px; text-align: right;" ><b>מספר טלפון</b></label>
+   <br><br>
+   <input type="date" name="date" value="" id="dateOfTreatment" style="margin-left: 202px;text-align: right;width: 200;">
+   <label for ="patientGender"style="display: inline-block; width: 140px; text-align: right;" ><b> תאריך ביצוע הטיפול</b></label>
+   <br><br>
+   <input type="text" name="treatmentType" value="" id="treatmentType"style="margin-left: 200px;text-align: right;">
+   <label for ="patientGender"style="display: inline-block; width: 140px; text-align: right;" ><b>סוג טיפול</b></label>
+   <br><br>
+   <input type="text" name="Password" value="" id="patientPassword"style="margin-left: 200px;text-align: right;" title="הסיסמא חייבת להכיל 8 תווים אות גדולה, אות קטנה ומספר"> 
+   <label for ="patientGender"style="display: inline-block; width: 140px; text-align: right;" ><b>סיסמה</b></label>
+   <br><br>
+   <input type="text" name="patientPain" value="" id="patientPain"style="margin-left: 200px;text-align: right;"> 
+   <label for ="patientGender"style="display: inline-block; width: 140px; text-align: right;" ><b>רמת כאב</b></label>
+   <br><br>
+   <input type="text" name="patientSwollen" value="" id="patientSwollen"style="margin-left: 200px;text-align: right;"> 
+   <label for ="patientGender"style="display: inline-block; width: 140px; text-align: right;" ><b>רמת נפיחות</b></label>
+   <br><br>
+   <input type="button" value="הצג מטופל" onclick="getPatient();" style="margin-left:200px" class="btn btn-info">
+		<input type="button" value="הוסף מטופל חדש" onclick="createPatient();"  class="btn btn-info">
+    <input type="button" value="עדכן פרטי מטופל" onclick="updatePatient();"  class="btn btn-info">
+	<input type="button" value="מעבר לתמונות מטופל" onclick="back()"  class="btn btn-info">
+	<br><br>
+	<action="/action_page.php">
+
+	</form>
+
+<script> 
+function back(){
+window.location="c2.html";
+}
+
+</script>
+
+
+
+</div>
+</div>
+</div>
+</body>
+
+</html>
